@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 class GetMoviesList(
     private val repository: MovieRepository
 ) {
-    fun execute(movieOrder: MovieOrder = MovieOrder.Title): Flow<List<Movie>> {
+   operator fun invoke(movieOrder: MovieOrder = MovieOrder.Title): Flow<List<Movie>> {
         return repository.getMoviesList().map { movies ->
             when (movieOrder) {
                 is MovieOrder.Title -> {

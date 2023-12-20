@@ -20,11 +20,13 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMovieDatabase(app: Application): MovieDatabase {
-        return Room.databaseBuilder(
+        val database = Room.databaseBuilder(
             app,
             MovieDatabase::class.java,
             MovieDatabase.DATABASE_NAME
         ).build()
+
+        return database
     }
 
     @Singleton
