@@ -10,4 +10,8 @@ import com.saimone.movielistapp.features_app.domain.models.Movie
 )
 abstract class MovieDatabase : RoomDatabase() {
     abstract val movieDao: MovieDao
+
+    companion object {
+        const val DATABASE_NAME = "movies_db"
+    }
 }
