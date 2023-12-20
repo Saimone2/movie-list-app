@@ -6,7 +6,7 @@ import com.saimone.movielistapp.features_app.domain.repository.MovieRepository
 class GetMovieById(
     private val repository: MovieRepository
 ) {
-    fun execute(id: Int): Movie? {
+    suspend fun execute(id: Int): Movie? {
         return repository.getMovieById(id)
     }
 }
