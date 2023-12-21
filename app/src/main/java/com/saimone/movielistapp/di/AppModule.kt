@@ -1,7 +1,6 @@
 package com.saimone.movielistapp.di
 
 import android.app.Application
-import androidx.room.Room
 import com.saimone.movielistapp.features_app.data.data_source.MovieDatabase
 import com.saimone.movielistapp.features_app.data.repository.MovieRepositoryImpl
 import com.saimone.movielistapp.features_app.domain.repository.MovieRepository
@@ -20,13 +19,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMovieDatabase(app: Application): MovieDatabase {
-        val database = Room.databaseBuilder(
-            app,
-            MovieDatabase::class.java,
-            MovieDatabase.DATABASE_NAME
-        ).build()
-
-        return database
+        return MovieDatabase.getInstance(app)
     }
 
     @Singleton

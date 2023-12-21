@@ -12,5 +12,6 @@ data class Movie(
     val duration: String,
     val genre: String,
     val releasedDate: String,
-    val trailerLink: String
+    val trailerLink: String,
+    val imageRes: Int
 )
