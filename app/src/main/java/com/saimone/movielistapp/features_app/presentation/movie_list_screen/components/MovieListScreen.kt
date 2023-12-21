@@ -1,4 +1,4 @@
-package com.saimone.movielistapp.features_app.presentation.main_list.components
+package com.saimone.movielistapp.features_app.presentation.movie_list_screen.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,14 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.saimone.movielistapp.features_app.presentation.main_list.MainListViewModel
+import com.saimone.movielistapp.features_app.presentation.movie_list_screen.MovieListViewModel
 import com.saimone.movielistapp.features_app.presentation.util.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
+fun MovieListScreen(
     navController: NavController,
-    viewModel: MainListViewModel = hiltViewModel()
+    viewModel: MovieListViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
 
@@ -48,14 +49,20 @@ fun MainScreen(
                             .fillMaxSize(),
                         contentAlignment = Alignment.BottomEnd
                     ) {
-                        Text(
-                            text = "Sort",
-                            style = LocalTextStyle.current.copy(
-                                fontSize = 17.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium
+                        IconButton(
+                            onClick = {
+
+                            }
+                        ) {
+                            Text(
+                                text = "Sort",
+                                style = LocalTextStyle.current.copy(
+                                    fontSize = 17.sp,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Medium
+                                )
                             )
-                        )
+                        }
                     }
                 })
         },
@@ -77,7 +84,7 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     content = {
-                        item { 
+                        item {
                             Spacer(modifier = Modifier.height(16.dp))
                         }
                         items(state.movies) { movie ->
@@ -87,7 +94,7 @@ fun MainScreen(
                                     .fillMaxWidth()
                                     .clickable {
                                         navController.navigate(
-                                            Screen.DetailScreen.route + "?movieId=${movie.id}"
+                                            Screen.MovieDetailScreen.route + "?movieId=${movie.id}"
                                         )
                                     }
                             )

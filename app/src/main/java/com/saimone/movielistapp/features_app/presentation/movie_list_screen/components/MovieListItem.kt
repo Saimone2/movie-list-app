@@ -1,4 +1,4 @@
-package com.saimone.movielistapp.features_app.presentation.main_list.components
+package com.saimone.movielistapp.features_app.presentation.movie_list_screen.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

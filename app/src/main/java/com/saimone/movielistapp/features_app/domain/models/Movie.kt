@@ -14,4 +14,16 @@ data class Movie(
     val releasedDate: String,
     val trailerLink: String,
     val imageRes: Int
-)
+) {
+    constructor() : this(
+        id = null,
+        title = "",
+        description = "",
+        rating = 0.0,
+        duration = "",
+        genre = "",
+        releasedDate = "",
+        trailerLink = "",
+        imageRes = 0
+    )
+}

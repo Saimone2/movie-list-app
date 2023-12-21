@@ -1,4 +1,4 @@
-package com.saimone.movielistapp.features_app.presentation.main_list
+package com.saimone.movielistapp.features_app.presentation.movie_list_screen
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class MainListViewModel @Inject constructor(
+class MovieListViewModel @Inject constructor(
     private val movieUseCases: MovieUseCases
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(MainListState())
-    val state: State<MainListState> = _state
+    private val _state = mutableStateOf(MovieListState())
+    val state: State<MovieListState> = _state
 
     private var getNotesJob: Job? = null
 
