@@ -2,6 +2,7 @@ package com.saimone.movielistapp.features_app.presentation.movie_list_screen.com
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -40,25 +41,31 @@ fun MovieListScreen(
 ) {
     val state = viewModel.state.value
     val interactionSource = remember { MutableInteractionSource() }
+    var sort = false
 
     Scaffold(
-        modifier = Modifier
-            .padding(horizontal = 16.dp),
         topBar = {
             TopAppBar(
                 title = { Text(text = "") },
                 actions = {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 16.dp),
                         horizontalAlignment = Alignment.End,
                     ) {
                         Button(
                             onClick = {
-                                viewModel.onEvent(MovieListEvent.Order(MovieOrder.ReleaseDate))
+                                if(sort) {
+                                    viewModel.onEvent(MovieListEvent.Order(MovieOrder.ReleaseDate))
+                                } else {
+                                    viewModel.onEvent(MovieListEvent.Order(MovieOrder.Title))
+                                }
+                                sort = !sort
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = Color.Black
+                                contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
                             ),
                             contentPadding = PaddingValues(horizontal = 14.dp),
                             modifier = Modifier.height(40.dp)
@@ -74,7 +81,7 @@ fun MovieListScreen(
         },
         content = { padding ->
             Column(
-                modifier = Modifier.padding(top = 52.dp)
+                modifier = Modifier.padding(top = 52.dp, start = 16.dp, end = 16.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.movies),

@@ -2,6 +2,7 @@ package com.saimone.movielistapp.features_app.presentation.movie_detail_screen.c
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -59,6 +60,7 @@ fun MovieDetailScreen(
     val uriHandler = LocalUriHandler.current
 
     val currentMovie: Movie = viewModel.currentMovie.value
+    val imageRes: Int = viewModel.imageRes.value
     var isWatchlisted: Boolean = viewModel.isWatchlisted.value
 
     val buttonText = stringResource(
@@ -81,7 +83,7 @@ fun MovieDetailScreen(
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent,
-                                contentColor = Color.Black
+                                contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
                             ),
                             contentPadding = PaddingValues(start = 4.dp, end = 12.dp),
                             modifier = Modifier
@@ -91,7 +93,6 @@ fun MovieDetailScreen(
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowLeft,
                                 modifier = Modifier.scale(1.4F),
-                                tint = Color.Black,
                                 contentDescription = stringResource(id = R.string.back_to_movies_list)
                             )
                             Text(
@@ -114,9 +115,10 @@ fun MovieDetailScreen(
         ) {
             Row {
                 Image(
-                    painterResource(id = R.drawable.knives_out),
+                    painterResource(id = imageRes),
                     contentDescription = currentMovie.title,
                     modifier = Modifier
+                        .padding(top = 10.dp)
                         .width(130.dp)
                         .shadow(
                             elevation = 5.dp,
@@ -132,7 +134,7 @@ fun MovieDetailScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 7.dp)
+                            .padding(top = 12.dp)
                     ) {
                         Text(
                             modifier = Modifier
@@ -162,11 +164,12 @@ fun MovieDetailScreen(
                     }
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
+                        modifier = Modifier.height(35.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.LightGray,
-                            contentColor = Color.Gray
+                            containerColor = if(isSystemInDarkTheme()) Color.DarkGray else Color.LightGray,
+                            contentColor = if(isSystemInDarkTheme()) Color.LightGray else Color.Gray
                         ),
-                        contentPadding = PaddingValues(horizontal = 10.dp),
+                        contentPadding = PaddingValues(horizontal = 11.dp),
                         onClick = {
                             isWatchlisted = !isWatchlisted
                             scope.launch {
@@ -178,8 +181,7 @@ fun MovieDetailScreen(
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = stringResource(id = R.string.add).uppercase(),
-                                modifier = Modifier.size(15.dp),
-                                tint = Color.Gray
+                                modifier = Modifier.size(15.dp)
                             )
                         }
                         Text(
@@ -187,15 +189,17 @@ fun MovieDetailScreen(
                             style = typography.titleSmall
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
                     Button(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
-                            contentColor = Color.Black
+                            contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
                         ),
-                        modifier = Modifier.width(120.dp),
+                        modifier = Modifier
+                            .width(128.dp)
+                            .height(35.dp),
                         contentPadding = PaddingValues(horizontal = 10.dp),
-                        border = BorderStroke(1.dp, Color.Black),
+                        border = BorderStroke(1.dp, if(isSystemInDarkTheme()) Color.White else Color.Black),
                         onClick = {
                             uriHandler.openUri(currentMovie.trailerLink)
                         }
@@ -207,6 +211,7 @@ fun MovieDetailScreen(
                     }
                 }
             }
+
             Spacer(modifier = Modifier.height(20.dp))
             Divider(thickness = 0.5.dp, color = Color.Gray)
             Spacer(modifier = Modifier.height(20.dp))
@@ -221,6 +226,7 @@ fun MovieDetailScreen(
                 text = currentMovie.description,
                 style = typography.bodyMedium
             )
+
             Spacer(modifier = Modifier.height(24.dp))
             Divider(thickness = 0.5.dp, color = Color.Gray)
             Spacer(modifier = Modifier.height(20.dp))
