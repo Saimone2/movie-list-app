@@ -6,24 +6,13 @@ import androidx.room.PrimaryKey
 @Entity
 data class Movie(
     @PrimaryKey val id: Int? = null,
-    val title: String,
-    val description: String,
-    val rating: Double,
-    val duration: String,
-    val genre: String,
-    val releasedDate: String,
-    val trailerLink: String,
-    val imageRes: Int
-) {
-    constructor() : this(
-        id = null,
-        title = "",
-        description = "",
-        rating = 0.0,
-        duration = "",
-        genre = "",
-        releasedDate = "",
-        trailerLink = "",
-        imageRes = 0
-    )
-}
+    val title: String = "",
+    val description: String = "",
+    val rating: Double = 0.0,
+    val duration: String= "",
+    val genre: String = "",
+    val releasedDate: String = "",
+    val trailerLink: String = "",
+    val imageRes: Int = 0,
+    val isWatchlisted: Boolean = false
+)

@@ -7,6 +7,7 @@ import com.saimone.movielistapp.features_app.domain.repository.MovieRepository
 import com.saimone.movielistapp.features_app.domain.use_cases.GetMovieById
 import com.saimone.movielistapp.features_app.domain.use_cases.GetMoviesList
 import com.saimone.movielistapp.features_app.domain.use_cases.MovieUseCases
+import com.saimone.movielistapp.features_app.domain.use_cases.ToggleWatchlisted
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +34,8 @@ object AppModule {
     fun provideMovieUseCases(repository: MovieRepository): MovieUseCases {
         return MovieUseCases(
             getMoviesList = GetMoviesList(repository),
-            getMovieById = GetMovieById(repository)
+            getMovieById = GetMovieById(repository),
+            toggleWatchlisted = ToggleWatchlisted(repository)
         )
     }
 }

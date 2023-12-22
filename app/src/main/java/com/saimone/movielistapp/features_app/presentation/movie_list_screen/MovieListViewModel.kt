@@ -26,6 +26,17 @@ class MovieListViewModel @Inject constructor(
         getMovies(MovieOrder.Title)
     }
 
+    fun onEvent(event: MovieListEvent) {
+        when (event) {
+            is MovieListEvent.Order -> {
+                if (state.value.movieItemOrder::class == event.movieOrder::class) {
+                    return
+                }
+                getMovies(event.movieOrder)
+            }
+        }
+    }
+
     private fun getMovies(movieItemOrder: MovieOrder) {
         getNotesJob?.cancel()
         getNotesJob = movieUseCases.getMoviesList(movieItemOrder)

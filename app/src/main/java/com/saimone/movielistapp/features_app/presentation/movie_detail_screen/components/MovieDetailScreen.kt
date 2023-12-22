@@ -2,11 +2,9 @@ package com.saimone.movielistapp.features_app.presentation.movie_detail_screen.c
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,15 +21,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -39,10 +34,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +45,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.saimone.movielistapp.R
 import com.saimone.movielistapp.features_app.domain.models.Movie
+import com.saimone.movielistapp.features_app.presentation.movie_detail_screen.MovieDetailEvent.ToggleWatchlisted
 import com.saimone.movielistapp.features_app.presentation.movie_detail_screen.MovieDetailViewModel
+import com.saimone.movielistapp.features_app.presentation.util.DateUtils
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,11 +56,16 @@ fun MovieDetailScreen(
     navController: NavController,
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
-    val currentMovie: Movie = viewModel.currentMovie.value
     val uriHandler = LocalUriHandler.current
 
-    var isWatchlisted by remember { mutableStateOf(false) }
-    val buttonText = if (isWatchlisted) "REMOVE FROM WATCHLIST" else "ADD TO WATCHLIST"
+    val currentMovie: Movie = viewModel.currentMovie.value
+    var isWatchlisted: Boolean = viewModel.isWatchlisted.value
+
+    val buttonText = stringResource(
+        if (isWatchlisted) R.string.remove_from_watchlist else R.string.add_to_watchlist
+    ).uppercase()
+
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -70,239 +73,173 @@ fun MovieDetailScreen(
                 title = { Text(text = "") },
                 actions = {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
+                        Button(
+                            onClick = {
+                                navController.navigateUp()
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color.Transparent,
+                                contentColor = Color.Black
+                            ),
+                            contentPadding = PaddingValues(start = 4.dp, end = 12.dp),
                             modifier = Modifier
-                                .clickable { navController.navigateUp() }
-                                .padding(vertical = 8.dp),
+                                .height(40.dp)
+                                .padding(horizontal = 12.dp),
                         ) {
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowLeft,
-                                modifier = Modifier.scale(1.6F),
+                                modifier = Modifier.scale(1.4F),
                                 tint = Color.Black,
-                                contentDescription = "Back to movies list"
+                                contentDescription = stringResource(id = R.string.back_to_movies_list)
                             )
                             Text(
                                 text = "Movies",
-                                style = LocalTextStyle.current.copy(
-                                    fontSize = 17.sp,
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Medium
-                                )
+                                modifier = Modifier,
+                                style = typography.labelMedium
                             )
                         }
+                        Spacer(modifier = Modifier.height(7.dp))
                         Divider(thickness = 0.5.dp, color = Color.Gray)
                     }
                 })
-        },
-        content = { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxSize()
-            ) {
-                Row {
-                    Image(
-                        painterResource(id = R.drawable.tenet),
-                        contentDescription = currentMovie.title,
-                        modifier = Modifier
-                            .width(130.dp)
-                            .shadow(
-                                elevation = 5.dp,
-                                spotColor = Color.Black
-                            )
-                            .clip(RoundedCornerShape(4.dp))
-                    )
-
-                    Column(
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(horizontal = 16.dp)
+                .fillMaxSize()
+        ) {
+            Row {
+                Image(
+                    painterResource(id = R.drawable.knives_out),
+                    contentDescription = currentMovie.title,
+                    modifier = Modifier
+                        .width(130.dp)
+                        .shadow(
+                            elevation = 5.dp,
+                            spotColor = Color.Black
+                        )
+                        .clip(RoundedCornerShape(4.dp))
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 15.dp)
+                ) {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 15.dp)
+                            .padding(top = 7.dp)
                     ) {
-                        Row(
+                        Text(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 7.dp)
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .padding(end = 15.dp),
-                                text = currentMovie.title,
-                                style = LocalTextStyle.current.copy(
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    lineHeight = 22.sp,
-                                    letterSpacing = 0.3.sp
-                                )
-                            )
-
-                            val text = buildAnnotatedString {
+                                .width(130.dp)
+                                .padding(top = 2.dp, end = 15.dp),
+                            text = currentMovie.title,
+                            style = typography.titleMedium
+                        )
+                        Text(
+                            text = buildAnnotatedString {
                                 withStyle(
                                     style = SpanStyle(
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 19.sp,
+                                        fontSize = 18.sp,
                                         letterSpacing = 0.sp
                                     )
                                 ) {
                                     append(currentMovie.rating.toString())
                                 }
                                 withStyle(
-                                    style = SpanStyle(
-                                        fontSize = 13.sp,
-                                        color = Color.Gray,
-                                        letterSpacing = 0.sp
-                                    )
+                                    style = typography.bodyMedium.toSpanStyle()
                                 ) {
                                     append("/10")
                                 }
                             }
-                            Text(text = text)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.Gray
+                        ),
+                        contentPadding = PaddingValues(horizontal = 10.dp),
+                        onClick = {
+                            isWatchlisted = !isWatchlisted
+                            scope.launch {
+                                viewModel.onEvent(ToggleWatchlisted)
+                            }
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Button(
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.LightGray,
-                                contentColor = Color.Gray
-                            ),
-                            contentPadding = PaddingValues(horizontal = 10.dp),
-                            onClick = {
-                                isWatchlisted = !isWatchlisted
-                            }
-                        ) {
-                            if (!isWatchlisted) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "ADD",
-                                    modifier = Modifier.size(15.dp),
-                                    tint = Color.Gray
-                                )
-                            }
-                            Text(
-                                text = buttonText,
-                                style = LocalTextStyle.current.copy(
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
+                    ) {
+                        if (!isWatchlisted) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = stringResource(id = R.string.add).uppercase(),
+                                modifier = Modifier.size(15.dp),
+                                tint = Color.Gray
                             )
                         }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Button(
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.White,
-                                contentColor = Color.Black
-                            ),
-                            modifier = Modifier.width(120.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp),
-                            border = BorderStroke(1.dp, Color.Black),
-                            onClick = {
-                                uriHandler.openUri(currentMovie.trailerLink)
-                            }
-                        ) {
-                            Text(
-                                text = "WATCH TRAILER",
-                                style = LocalTextStyle.current.copy(
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            )
+                        Text(
+                            text = buttonText,
+                            style = typography.titleSmall
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.Black
+                        ),
+                        modifier = Modifier.width(120.dp),
+                        contentPadding = PaddingValues(horizontal = 10.dp),
+                        border = BorderStroke(1.dp, Color.Black),
+                        onClick = {
+                            uriHandler.openUri(currentMovie.trailerLink)
                         }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.watch_trailer).uppercase(),
+                            style = typography.titleSmall
+                        )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(20.dp))
-                Divider(thickness = 0.5.dp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = "Short description",
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = LocalTextStyle.current.copy(
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Text(
-                    text = currentMovie.description,
-                    style = LocalTextStyle.current.copy(
-                        fontSize = 13.sp,
-                        color = Color.Gray
-                    )
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Divider(thickness = 0.5.dp, color = Color.Gray)
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = "Details",
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    style = LocalTextStyle.current.copy(
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-
-                Row(
-                    Modifier.width(300.dp)
-                ) {
-                    TableCell(
-                        text = "Genre",
-                        weight = .3f,
-                        textAlign = TextAlign.End,
-                        fontWeight = FontWeight.Medium,
-                        fontColor = Color.Black
-                    )
-                    TableCell(
-                        text = currentMovie.genre,
-                        weight = .5f,
-                        textAlign = TextAlign.Start
-                    )
-                }
-                Row(
-                    Modifier.width(300.dp)
-                ) {
-                    TableCell(
-                        text = "Release date",
-                        weight = .3f,
-                        textAlign = TextAlign.End,
-                        fontWeight = FontWeight.Medium,
-                        fontColor = Color.Black
-                    )
-                    TableCell(
-                        text = currentMovie.releasedDate,
-                        weight = .5f,
-                        textAlign = TextAlign.Start
-                    )
-                }
             }
-        }
-    )
-}
+            Spacer(modifier = Modifier.height(20.dp))
+            Divider(thickness = 0.5.dp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(20.dp))
 
-@Composable
-fun RowScope.TableCell(
-    text: String,
-    weight: Float,
-    textAlign: TextAlign,
-    fontWeight: FontWeight = FontWeight.Normal,
-    fontColor: Color = Color.Gray
-) {
-    Text(
-        text = text,
-        Modifier
-            .padding(end = 3.dp)
-            .weight(weight)
-            .padding(8.dp),
-        textAlign = textAlign,
-        style = LocalTextStyle.current.copy(
-            fontSize = 15.sp,
-            color = fontColor,
-            letterSpacing = 0.sp,
-            fontWeight = fontWeight
-        )
-    )
+            Text(
+                text = stringResource(id = R.string.short_description),
+                modifier = Modifier.padding(bottom = 10.dp),
+                style = typography.titleMedium
+            )
+
+            Text(
+                text = currentMovie.description,
+                style = typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Divider(thickness = 0.5.dp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = stringResource(id = R.string.details),
+                modifier = Modifier.padding(bottom = 10.dp),
+                style = typography.titleMedium
+            )
+
+            MovieTableRow(
+                headerText = stringResource(id = R.string.genre),
+                text = currentMovie.genre
+            )
+
+            MovieTableRow(
+                headerText = stringResource(id = R.string.release_date),
+                text = DateUtils.formatReleaseDate(currentMovie.releasedDate)
+            )
+        }
+    }
 }

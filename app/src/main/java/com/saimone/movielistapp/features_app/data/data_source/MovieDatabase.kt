@@ -45,7 +45,7 @@ abstract class MovieDatabase : RoomDatabase() {
             ),
             Movie(
                 title = "Spider-Man: Into the Spider-Verse",
-                description = " Teen Miles Morales becomes the Spider-Man of his universe, and must join with five " +
+                description = "Teen Miles Morales becomes the Spider-Man of his universe, and must join with five " +
                         "spider-powered individuals from other dimensions to stop a threat for all realities.",
                 rating = 8.4,
                 duration = "1h 57min",

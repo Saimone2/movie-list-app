@@ -2,5 +2,6 @@ package com.saimone.movielistapp.features_app.domain.use_cases
 
 data class MovieUseCases(
     val getMoviesList: GetMoviesList,
-    val getMovieById: GetMovieById
+    val getMovieById: GetMovieById,
+    val toggleWatchlisted: ToggleWatchlisted
 )

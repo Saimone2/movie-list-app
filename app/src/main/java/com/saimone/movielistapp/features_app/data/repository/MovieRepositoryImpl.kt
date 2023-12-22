@@ -15,4 +15,8 @@ class MovieRepositoryImpl(
     override suspend fun getMovieById(id: Int): Movie? {
         return movieDao.getMovieById(id)
     }
+
+    override suspend fun insertMovie(movie: Movie) {
+        return movieDao.insertMovie(movie)
+    }
 }

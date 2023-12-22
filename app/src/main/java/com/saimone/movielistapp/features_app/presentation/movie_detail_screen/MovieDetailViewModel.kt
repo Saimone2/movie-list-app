@@ -1,6 +1,7 @@
 package com.saimone.movielistapp.features_app.presentation.movie_detail_screen
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,9 @@ class MovieDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    private val _isWatchlisted = mutableStateOf(false)
+    val isWatchlisted: State<Boolean> = _isWatchlisted
+
     private val _currentMovie = mutableStateOf(Movie())
     val currentMovie: MutableState<Movie> = _currentMovie
 
@@ -26,6 +30,22 @@ class MovieDetailViewModel @Inject constructor(
                 viewModelScope.launch {
                     movieUseCases.getMovieById(movieId)?.also { movie ->
                         _currentMovie.value = movie
+                        _isWatchlisted.value = currentMovie.value.isWatchlisted
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun onEvent(event: MovieDetailEvent) {
+        when (event) {
+            is MovieDetailEvent.ToggleWatchlisted -> {
+                movieUseCases.toggleWatchlisted(currentMovie.value)
+
+                currentMovie.value.id?.let {
+                    movieUseCases.getMovieById(it)?.also { movie ->
+                        _currentMovie.value = movie
+                        _isWatchlisted.value = currentMovie.value.isWatchlisted
                     }
                 }
             }

@@ -1,7 +1,6 @@
 val roomVersion: String = "2.6.1"
 val hiltVersion: String = "2.48"
 
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
