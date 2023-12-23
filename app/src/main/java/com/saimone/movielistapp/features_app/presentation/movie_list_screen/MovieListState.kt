@@ -6,4 +6,5 @@ import com.saimone.movielistapp.features_app.domain.util.MovieOrder
 data class MovieListState(
     val movies: List<Movie> = emptyList(),
     val movieItemOrder: MovieOrder = MovieOrder.Title,
+    val isSortSectionVisible: Boolean = false
 )

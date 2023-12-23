@@ -12,4 +12,5 @@
     <string name="short_description">Short description</string>
     <string name="genre">Genre</string>
     <string name="release_date">Release date</string>
+    <string name="title">Title</string>
 </resources>

@@ -65,6 +65,13 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
+    // Testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    implementation("org.mockito:mockito-core:5.8.0")
+    implementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+
     implementation("com.google.accompanist:accompanist-insets:0.27.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.27.0")
     implementation("androidx.core:core-ktx:1.12.0")

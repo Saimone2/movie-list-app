@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [Movie::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class MovieDatabase : RoomDatabase() {
     abstract val movieDao: MovieDao

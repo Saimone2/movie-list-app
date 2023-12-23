@@ -41,7 +41,6 @@ fun MovieItem(
                     contentDescription = movie.title,
                     modifier = Modifier
                         .width(110.dp)
-                        .padding(horizontal = 6.dp)
                         .shadow(
                             elevation = 5.dp,
                             spotColor = Color.Black

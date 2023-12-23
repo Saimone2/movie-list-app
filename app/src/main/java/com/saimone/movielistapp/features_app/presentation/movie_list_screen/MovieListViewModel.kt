@@ -20,6 +20,20 @@ class MovieListViewModel @Inject constructor(
     private val _state = mutableStateOf(MovieListState())
     val state: State<MovieListState> = _state
 
+    private val _filterMovieTitle = mutableStateOf(
+        MovieTextFieldState(
+            hint = "Title"
+        )
+    )
+    val filterMovieTitle: State<MovieTextFieldState> = _filterMovieTitle
+
+    private val _filterMovieReleaseDate = mutableStateOf(
+        MovieTextFieldState(
+            hint = "Release date"
+        )
+    )
+    val filterMovieReleaseDate: State<MovieTextFieldState> = _filterMovieReleaseDate
+
     private var getNotesJob: Job? = null
 
     init {
@@ -33,6 +47,36 @@ class MovieListViewModel @Inject constructor(
                     return
                 }
                 getMovies(event.movieOrder)
+            }
+
+            is MovieListEvent.ToggleSortSection -> {
+                _state.value = state.value.copy(
+                    isSortSectionVisible = !state.value.isSortSectionVisible
+                )
+            }
+
+            is MovieListEvent.ChangeReleaseDateFocus -> {
+                _filterMovieReleaseDate.value = _filterMovieReleaseDate.value.copy(
+                    isHintVisible = !event.focusState.isFocused && _filterMovieReleaseDate.value.text.isBlank()
+                )
+            }
+
+            is MovieListEvent.ChangeTitleFocus -> {
+                _filterMovieTitle.value = _filterMovieTitle.value.copy(
+                    isHintVisible = !event.focusState.isFocused && _filterMovieTitle.value.text.isBlank()
+                )
+            }
+
+            is MovieListEvent.EnteredReleaseDate -> {
+                _filterMovieReleaseDate.value = _filterMovieReleaseDate.value.copy(
+                    text = event.value
+                )
+            }
+
+            is MovieListEvent.EnteredTitle -> {
+                _filterMovieTitle.value = _filterMovieTitle.value.copy(
+                    text = event.value
+                )
             }
         }
     }
