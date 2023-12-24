@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.saimone.movielistapp.R
@@ -87,29 +88,40 @@ fun MovieListScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     content = {
-                        item {
-                            Text(
-                                text = stringResource(id = R.string.movies),
-                                modifier = Modifier.padding(horizontal = 6.dp),
-                                style = typography.titleLarge
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        items(state.movies) { movie ->
-                            MovieItem(
-                                movie = movie,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable(
-                                        interactionSource = interactionSource,
-                                        indication = null
-                                    ) {
-                                        navController.navigate(
-                                            Screen.MovieDetailScreen.route + "?movieId=${movie.id}"
-                                        )
-                                    }
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
+                        if(state.filteredMovies.isEmpty()) {
+                            item {
+                                Text(
+                                    text = stringResource(id = R.string.movies_not_found),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
+                                    style = typography.titleLarge.copy(fontSize = 30.sp)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                        } else {
+                            item {
+                                Text(
+                                    text = stringResource(id = R.string.movies),
+                                    modifier = Modifier.padding(horizontal = 6.dp),
+                                    style = typography.titleLarge
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                            items(state.filteredMovies) { movie ->
+                                MovieItem(
+                                    movie = movie,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable(
+                                            interactionSource = interactionSource,
+                                            indication = null
+                                        ) {
+                                            navController.navigate(
+                                                Screen.MovieDetailScreen.route + "?movieId=${movie.id}"
+                                            )
+                                        }
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
                         }
                     }
                 )

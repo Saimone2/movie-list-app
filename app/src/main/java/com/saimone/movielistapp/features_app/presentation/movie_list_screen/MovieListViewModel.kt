@@ -47,6 +47,38 @@ class MovieListViewModel @Inject constructor(
                 getMovies(event.movieOrder)
             }
 
+            is MovieListEvent.Filter -> {
+                var filteredMovies = state.value.movies
+                if (filterMovieTitle.value.text.isNotEmpty() && filterMovieReleaseDate.value.text.isNotEmpty()) {
+                    filteredMovies = state.value.movies.filter { movie ->
+                        movie.title.contains(
+                            filterMovieTitle.value.text,
+                            ignoreCase = true
+                        ) && movie.releasedDate.contains(
+                            filterMovieReleaseDate.value.text,
+                            ignoreCase = true
+                        )
+                    }
+                } else if (filterMovieTitle.value.text.isNotEmpty()) {
+                    filteredMovies = state.value.movies.filter { movie ->
+                        movie.title.contains(
+                            filterMovieTitle.value.text,
+                            ignoreCase = true
+                        )
+                    }
+                } else if (filterMovieReleaseDate.value.text.isNotEmpty()) {
+                    filteredMovies = state.value.movies.filter { movie ->
+                        movie.releasedDate.contains(
+                            filterMovieReleaseDate.value.text,
+                            ignoreCase = true
+                        )
+                    }
+                }
+                _state.value = state.value.copy(
+                    filteredMovies = filteredMovies
+                )
+            }
+
             is MovieListEvent.ToggleSortSection -> {
                 _state.value = state.value.copy(
                     isSortSectionVisible = !state.value.isSortSectionVisible
@@ -98,6 +130,7 @@ class MovieListViewModel @Inject constructor(
             .onEach { movies ->
                 _state.value = state.value.copy(
                     movies = movies,
+                    filteredMovies = movies,
                     movieItemOrder = movieItemOrder
                 )
             }

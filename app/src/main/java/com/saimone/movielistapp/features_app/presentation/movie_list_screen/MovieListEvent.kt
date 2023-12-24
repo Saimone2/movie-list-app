@@ -10,5 +10,6 @@ sealed class MovieListEvent {
     data class ChangeTitleFocus(val focusState: FocusState) : MovieListEvent()
     data class EnteredReleaseDate(val value: String) : MovieListEvent()
     data class ChangeReleaseDateFocus(val focusState: FocusState) : MovieListEvent()
+    data class Filter(val value: String) : MovieListEvent()
     data object ClearFilterSortState : MovieListEvent()
 }

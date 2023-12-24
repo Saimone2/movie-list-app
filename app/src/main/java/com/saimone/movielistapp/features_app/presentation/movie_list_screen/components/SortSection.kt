@@ -100,6 +100,7 @@ fun SortSection(
                         hint = titleState.hint,
                         onValueChange = {
                             viewModel.onEvent(MovieListEvent.EnteredTitle(it))
+                            viewModel.onEvent(MovieListEvent.Filter(it))
                         },
                         onFocusChange = {
                             viewModel.onEvent(MovieListEvent.ChangeTitleFocus(it))
@@ -154,6 +155,7 @@ fun SortSection(
                         hint = releaseDateState.hint,
                         onValueChange = {
                             viewModel.onEvent(MovieListEvent.EnteredReleaseDate(it))
+                            viewModel.onEvent(MovieListEvent.Filter(it))
                         },
                         onFocusChange = {
                             viewModel.onEvent(MovieListEvent.ChangeReleaseDateFocus(it))

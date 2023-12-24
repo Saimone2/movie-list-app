@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Movie List App</string>
     <string name="movies">Movies</string>
+    <string name="movies_not_found">Movies not found</string>
     <string name="remove_from_watchlist">remove from watchlist</string>
     <string name="add_to_watchlist">add to watchlist</string>
     <string name="on_my_watchlist">on my watchlist</string>
