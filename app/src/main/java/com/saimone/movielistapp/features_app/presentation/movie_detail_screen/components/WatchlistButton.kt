@@ -1,6 +1,5 @@
 package com.saimone.movielistapp.features_app.presentation.movie_detail_screen.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -22,13 +21,14 @@ import com.saimone.movielistapp.R
 fun WatchlistButton(
     isWatchlisted: Boolean,
     buttonText: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isDarkTheme: Boolean
 ) {
     Button(
         modifier = Modifier.height(35.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray,
-            contentColor = if (isSystemInDarkTheme()) Color.LightGray else Color.Gray
+            containerColor = if (isDarkTheme) Color.DarkGray else Color.LightGray,
+            contentColor = if (isDarkTheme) Color.LightGray else Color.Gray
         ),
         contentPadding = PaddingValues(horizontal = 11.dp),
         onClick = onClick

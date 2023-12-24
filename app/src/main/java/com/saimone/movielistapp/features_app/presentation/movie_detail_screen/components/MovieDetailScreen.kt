@@ -51,6 +51,7 @@ fun MovieDetailScreen(
     navController: NavController,
     viewModel: MovieDetailViewModel = hiltViewModel()
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
     val uriHandler = LocalUriHandler.current
 
     val currentMovie: Movie = viewModel.currentMovie.value
@@ -74,7 +75,7 @@ fun MovieDetailScreen(
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
-                        contentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+                        contentColor = if (isDarkTheme) Color.White else Color.Black
                     ),
                     contentPadding = PaddingValues(start = 4.dp, end = 12.dp),
                     modifier = Modifier
@@ -153,6 +154,7 @@ fun MovieDetailScreen(
                             WatchlistButton(
                                 isWatchlisted = isWatchlisted,
                                 buttonText = buttonText,
+                                isDarkTheme = isDarkTheme,
                                 onClick = {
                                     isWatchlisted = !isWatchlisted
                                     scope.launch {
@@ -165,7 +167,8 @@ fun MovieDetailScreen(
 
                             TrailerButton(
                                 currentMovie = currentMovie,
-                                uriHandler = uriHandler
+                                uriHandler = uriHandler,
+                                isDarkTheme = isDarkTheme
                             )
                         }
                     }
@@ -197,12 +200,14 @@ fun MovieDetailScreen(
 
                     MovieTableRow(
                         headerText = stringResource(id = R.string.genre),
-                        text = currentMovie.genre
+                        text = currentMovie.genre,
+                        isDarkTheme = isDarkTheme
                     )
 
                     MovieTableRow(
                         headerText = stringResource(id = R.string.release_date),
-                        text = DateUtils.formatReleaseDate(currentMovie.releasedDate)
+                        text = DateUtils.formatReleaseDate(currentMovie.releasedDate),
+                        isDarkTheme = isDarkTheme
                     )
                 }
             }

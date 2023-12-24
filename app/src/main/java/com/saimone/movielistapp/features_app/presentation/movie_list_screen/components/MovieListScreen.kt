@@ -42,6 +42,7 @@ fun MovieListScreen(
 ) {
     val state = viewModel.state.value
     val interactionSource = remember { MutableInteractionSource() }
+    val isDarkTheme = isSystemInDarkTheme()
 
     Scaffold(
         content = { padding ->
@@ -57,7 +58,7 @@ fun MovieListScreen(
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
-                        contentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+                        contentColor = if (isDarkTheme) Color.White else Color.Black
                     ),
                     contentPadding = PaddingValues(horizontal = 14.dp),
                 ) {
@@ -76,6 +77,7 @@ fun MovieListScreen(
                         onSortChange = {
                             viewModel.onEvent(MovieListEvent.Order(it))
                         },
+                        isDarkTheme = isDarkTheme,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(start = 6.dp, end = 6.dp, bottom = 14.dp, top = 6.dp)

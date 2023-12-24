@@ -1,6 +1,5 @@
 package com.saimone.movielistapp.features_app.presentation.movie_detail_screen.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MovieTableRow(headerText: String, text: String) {
+fun MovieTableRow(
+    headerText: String,
+    text: String,
+    isDarkTheme: Boolean
+) {
     Row(
         Modifier.width(300.dp)
     ) {
@@ -24,7 +27,10 @@ fun MovieTableRow(headerText: String, text: String) {
             text = headerText,
             weight = .2f,
             textAlign = TextAlign.End,
-            style = typography.bodyMedium.copy(fontWeight = FontWeight.Medium, color = if(isSystemInDarkTheme()) Color.White else Color.Black),
+            style = typography.bodyMedium.copy(
+                fontWeight = FontWeight.Medium,
+                color = if (isDarkTheme) Color.White else Color.Black
+            ),
         )
         MovieTableCell(
             text = text,
@@ -52,4 +58,3 @@ fun RowScope.MovieTableCell(
         style = style
     )
 }
-

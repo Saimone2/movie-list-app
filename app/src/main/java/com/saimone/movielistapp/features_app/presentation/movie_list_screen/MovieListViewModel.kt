@@ -35,7 +35,7 @@ class MovieListViewModel @Inject constructor(
     )
     val filterMovieReleaseDate: State<MovieTextFieldState> = _filterMovieReleaseDate
 
-    private var getNotesJob: Job? = null
+    private var getMoviesJob: Job? = null
 
     init {
         getMovies(MovieOrder.Title(OrderType.Ascending))
@@ -44,9 +44,6 @@ class MovieListViewModel @Inject constructor(
     fun onEvent(event: MovieListEvent) {
         when (event) {
             is MovieListEvent.Order -> {
-                _state.value = state.value.copy(
-                    movieItemOrder = event.movieOrder
-                )
                 getMovies(event.movieOrder)
             }
 
@@ -57,34 +54,47 @@ class MovieListViewModel @Inject constructor(
             }
 
             is MovieListEvent.ChangeReleaseDateFocus -> {
-                _filterMovieReleaseDate.value = _filterMovieReleaseDate.value.copy(
-                    isHintVisible = !event.focusState.isFocused && _filterMovieReleaseDate.value.text.isBlank()
+                _filterMovieReleaseDate.value = filterMovieReleaseDate.value.copy(
+                    isHintVisible = !event.focusState.isFocused && filterMovieReleaseDate.value.text.isBlank()
                 )
             }
 
             is MovieListEvent.ChangeTitleFocus -> {
                 _filterMovieTitle.value = _filterMovieTitle.value.copy(
-                    isHintVisible = !event.focusState.isFocused && _filterMovieTitle.value.text.isBlank()
+                    isHintVisible = !event.focusState.isFocused && filterMovieTitle.value.text.isBlank()
                 )
             }
 
             is MovieListEvent.EnteredReleaseDate -> {
-                _filterMovieReleaseDate.value = _filterMovieReleaseDate.value.copy(
+                _filterMovieReleaseDate.value = filterMovieReleaseDate.value.copy(
                     text = event.value
                 )
             }
 
             is MovieListEvent.EnteredTitle -> {
-                _filterMovieTitle.value = _filterMovieTitle.value.copy(
+                _filterMovieTitle.value = filterMovieTitle.value.copy(
                     text = event.value
+                )
+            }
+
+            is MovieListEvent.ClearFilterSortState -> {
+                getMovies(MovieOrder.Title(OrderType.Ascending))
+                _state.value = state.value.copy(
+                    isSortSectionVisible = !state.value.isSortSectionVisible
+                )
+                _filterMovieTitle.value = filterMovieTitle.value.copy(
+                    text = ""
+                )
+                _filterMovieReleaseDate.value = filterMovieReleaseDate.value.copy(
+                    text = ""
                 )
             }
         }
     }
 
     private fun getMovies(movieItemOrder: MovieOrder) {
-        getNotesJob?.cancel()
-        getNotesJob = movieUseCases.getMoviesList(movieItemOrder)
+        getMoviesJob?.cancel()
+        getMoviesJob = movieUseCases.getMoviesList(movieItemOrder)
             .onEach { movies ->
                 _state.value = state.value.copy(
                     movies = movies,

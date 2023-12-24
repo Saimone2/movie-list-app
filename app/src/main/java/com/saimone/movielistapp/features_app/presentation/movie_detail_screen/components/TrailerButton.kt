@@ -1,7 +1,6 @@
 package com.saimone.movielistapp.features_app.presentation.movie_detail_screen.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -21,18 +20,20 @@ import com.saimone.movielistapp.features_app.domain.models.Movie
 @Composable
 fun TrailerButton(
     currentMovie: Movie,
-    uriHandler: UriHandler
+    uriHandler: UriHandler,
+    isDarkTheme: Boolean
 ) {
+
     Button(
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent,
-            contentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+            contentColor = if (isDarkTheme) Color.White else Color.Black
         ),
         modifier = Modifier
             .width(128.dp)
             .height(35.dp),
         contentPadding = PaddingValues(horizontal = 10.dp),
-        border = BorderStroke(1.dp, if (isSystemInDarkTheme()) Color.White else Color.Black),
+        border = BorderStroke(1.dp, if (isDarkTheme) Color.White else Color.Black),
         onClick = {
             uriHandler.openUri(currentMovie.trailerLink)
         }
