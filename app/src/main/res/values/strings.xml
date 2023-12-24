@@ -13,4 +13,6 @@
     <string name="genre">Genre</string>
     <string name="release_date">Release date</string>
     <string name="title">Title</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 </resources>

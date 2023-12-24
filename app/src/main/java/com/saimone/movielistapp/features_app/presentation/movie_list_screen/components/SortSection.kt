@@ -11,17 +11,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.saimone.movielistapp.R
 import com.saimone.movielistapp.features_app.domain.util.MovieOrder
+import com.saimone.movielistapp.features_app.domain.util.OrderType
 import com.saimone.movielistapp.features_app.presentation.movie_list_screen.MovieListEvent
 import com.saimone.movielistapp.features_app.presentation.movie_list_screen.MovieListViewModel
 
@@ -29,10 +35,15 @@ import com.saimone.movielistapp.features_app.presentation.movie_list_screen.Movi
 fun SortSection(
     viewModel: MovieListViewModel,
     onSortChange: (MovieOrder) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val titleState = viewModel.filterMovieTitle.value
     val releaseDateState = viewModel.filterMovieReleaseDate.value
+
+    val sortByTitle = remember { mutableStateOf(true) }
+    val sortAscending = remember { mutableStateOf(true) }
+
+    var movieOrder: MovieOrder
 
     Column(
         modifier = modifier,
@@ -52,13 +63,30 @@ fun SortSection(
                 ) {
                     IconButton(
                         onClick = {
-
+                            if (!sortByTitle.value) {
+                                sortAscending.value = true
+                                movieOrder = MovieOrder.Title(OrderType.Ascending)
+                                onSortChange(movieOrder)
+                            } else {
+                                movieOrder = if (sortAscending.value) {
+                                    MovieOrder.Title(OrderType.Descending)
+                                } else {
+                                    MovieOrder.Title(OrderType.Ascending)
+                                }
+                                onSortChange(movieOrder)
+                                sortAscending.value = !sortAscending.value
+                            }
+                            sortByTitle.value = true
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Descending",
-                            tint = Color.Gray
+                            imageVector = if (sortByTitle.value && sortAscending.value) {
+                                Icons.Default.KeyboardArrowDown
+                            } else {
+                                Icons.Default.KeyboardArrowUp
+                            },
+                            contentDescription = stringResource(id = R.string.sort),
+                            tint = if (sortByTitle.value) Color.Gray else Color.Transparent
                         )
                     }
                     FilterTextField(
@@ -85,13 +113,30 @@ fun SortSection(
                 ) {
                     IconButton(
                         onClick = {
-
+                            if (sortByTitle.value) {
+                                sortAscending.value = true
+                                movieOrder = MovieOrder.ReleaseDate(OrderType.Ascending)
+                                onSortChange(movieOrder)
+                            } else {
+                                movieOrder = if (sortAscending.value) {
+                                    MovieOrder.ReleaseDate(OrderType.Descending)
+                                } else {
+                                    MovieOrder.ReleaseDate(OrderType.Ascending)
+                                }
+                                onSortChange(movieOrder)
+                                sortAscending.value = !sortAscending.value
+                            }
+                            sortByTitle.value = false
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Descending",
-                            tint = Color.Gray
+                            imageVector = if (!sortByTitle.value && sortAscending.value) {
+                                Icons.Default.KeyboardArrowDown
+                            } else {
+                                Icons.Default.KeyboardArrowUp
+                            },
+                            contentDescription = stringResource(id = R.string.sort),
+                            tint = if (!sortByTitle.value) Color.Gray else Color.Transparent
                         )
                     }
                     FilterTextField(

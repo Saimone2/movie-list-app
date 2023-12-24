@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saimone.movielistapp.features_app.domain.use_cases.MovieUseCases
 import com.saimone.movielistapp.features_app.domain.util.MovieOrder
+import com.saimone.movielistapp.features_app.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -37,15 +38,15 @@ class MovieListViewModel @Inject constructor(
     private var getNotesJob: Job? = null
 
     init {
-        getMovies(MovieOrder.Title)
+        getMovies(MovieOrder.Title(OrderType.Ascending))
     }
 
     fun onEvent(event: MovieListEvent) {
         when (event) {
             is MovieListEvent.Order -> {
-                if (state.value.movieItemOrder::class == event.movieOrder::class) {
-                    return
-                }
+                _state.value = state.value.copy(
+                    movieItemOrder = event.movieOrder
+                )
                 getMovies(event.movieOrder)
             }
 
