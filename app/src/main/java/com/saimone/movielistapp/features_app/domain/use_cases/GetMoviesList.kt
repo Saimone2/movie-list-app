@@ -18,14 +18,14 @@ class GetMoviesList(
                 is OrderType.Ascending -> {
                     when (movieOrder) {
                         is MovieOrder.Title -> movies.sortedBy { it.title.lowercase() }
-                        is MovieOrder.ReleaseDate -> movies.sortedByDescending { it.releasedDate.lowercase() }
+                        is MovieOrder.ReleaseDate -> movies.sortedBy { it.releasedDate.lowercase() }
                     }
                 }
 
                 is OrderType.Descending -> {
                     when (movieOrder) {
                         is MovieOrder.Title -> movies.sortedByDescending { it.title.lowercase() }
-                        is MovieOrder.ReleaseDate -> movies.sortedBy { it.releasedDate.lowercase() }
+                        is MovieOrder.ReleaseDate -> movies.sortedByDescending { it.releasedDate.lowercase() }
                     }
                 }
             }
